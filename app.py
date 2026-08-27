@@ -18,10 +18,6 @@ except ImportError:
     AUTOREFRESH = False
 
 # =========================================================
-
-if "MAPBOX_ACCESS_TOKEN" not in st.secrets:
-    st.error("🚨 **Mapbox Token Missing!** Please add `MAPBOX_ACCESS_TOKEN = \"pk...\"` to your Streamlit Cloud Secrets (in Advanced Settings).")
-    st.stop()
 # GEOGRAPHY — verified coordinates
 # =========================================================
 SALAMINA_CENTER = {"lat": 37.9639, "lon": 23.4944}
@@ -426,7 +422,7 @@ if show_fm_burns:
 
 fig_map.update_layout(
     map=dict(
-        style=f"https://api.mapbox.com/styles/v1/disasterdb/cmaycljer005l01sy9qzodnrb?access_token={st.secrets.get('MAPBOX_ACCESS_TOKEN', 'YOUR_MAPBOX_TOKEN')}", 
+        style="carto-darkmatter", 
         center=SALAMINA_CENTER, 
         zoom=11,
         layers=wms_layers
