@@ -376,7 +376,7 @@ fig_map = go.Figure()
 
 # --- Layer 3: Active Fire Hotspots (FireMap.live) ---
 if not hotspots.empty:
-    fig_map.add_trace(go.Scattermapbox(
+    fig_map.add_trace(go.Scattermap(
         lat=hotspots["lat"], lon=hotspots["lon"], mode="markers",
         marker=dict(size=14, color="#ff3300", opacity=0.9),
         customdata=np.stack([
@@ -390,7 +390,7 @@ if not hotspots.empty:
 
 
 # --- Layer 2: live danger points (on top) ---
-fig_map.add_trace(go.Scattermapbox(
+fig_map.add_trace(go.Scattermap(
     lat=mdf["lat"], lon=mdf["lon"], mode="markers+text",
     text=mdf["name"], textposition="bottom center",
     marker=dict(size=22, color=mdf["Color"]),
@@ -421,7 +421,7 @@ if show_fm_burns:
 
 
 fig_map.update_layout(
-    mapbox=dict(
+    map=dict(
         accesstoken=st.secrets.get("MAPBOX_ACCESS_TOKEN", "YOUR_MAPBOX_TOKEN"),
         style="mapbox://styles/disasterdb/cmaycljer005l01sy9qzodnrb", 
         center=SALAMINA_CENTER, 
