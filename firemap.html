@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>FireMap: Track Wildfires in Real-Time with Data from NASA & Local Authorities</title>
+  
+  <!-- Responsive Meta Tag -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2b2b2b">
+  
+  <!-- Preconnect to critical origins (perf / Core Web Vitals) -->
+  <link rel="preconnect" href="https://api.mapbox.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">s
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="fireicon.png" type="image/png">
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Track global wildfires in real-time with FireMap, using data from NASA FIRMS, EFFIS, and national fire agencies. Stay informed on wildfire activity across the world.">
+  <meta name="keywords" content="FireMap, wildfire tracking, real-time fire map, NASA FIRMS, EFFIS fire data, Canadian wildfires, US wildfires, global fire data, satellite hotspots, australia bushfire, bushfire, firemap.live">
+  <link rel="canonical" href="https://firemap.live" />
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="FireMap.live" />
+  <meta property="og:title" content="FireMap: Track Wildfires in Real-Time with NASA & Local Data" />
+  <meta property="og:description" content="Explore real-time global wildfire tracking with data from NASA FIRMS, EFFIS, and local authorities on FireMap.live." />
+  <meta property="og:image" content="https://firemap.live/fireicon.png" />
+  <meta property="og:url" content="https://firemap.live" />
+  
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@disaster_db" />
+  <meta name="twitter:title" content="FireMap: Track Wildfires in Real-Time with NASA & Local Data" />
+  <meta name="twitter:description" content="Real-time global wildfire tracking with data from NASA FIRMS, EFFIS, and local authorities." />
+  <meta name="twitter:image" content="https://firemap.live/fireicon.png" />
+  
+  <!-- Google Tag Manager -->
+  <script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-KDMXGXGG');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEHBCLVBTB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DEHBCLVBTB');
+  </script>
+  <!-- End Google Analytics -->  
+  
+  <!-- Structured Data for Global Wildfire Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "Global Wildfire Data",
+    "description": "A comprehensive dataset combining EFFIS, NASA FIRMS, and national fire agencies for real-time wildfire tracking.",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "creator": {
+      "@type": "Organization",
+      "name": "FireMap.live"
+    },
+    "keywords": "wildfire, real-time, NASA FIRMS, EFFIS, Canada, US, satellite data",
+    "distribution": {
+      "@type": "DataDownload",
+      "encodingFormat": "application/json",
+      "contentUrl": "https://firemap.live"
+    },
+    "temporalCoverage": "2026-01-01T00:00:00Z/2026-12-31T23:59:59Z",
+    "spatialCoverage": {
+      "@type": "Place",
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "0",
+        "longitude": "0"
+      }
+    },
+    "variableMeasured": [
+      {
+        "@type": "PropertyValue",
+        "name": "Fire Confidence",
+        "value": "High"
+      }
+    ],
+    "dataSource": [
+      {
+        "@type": "Organization",
+        "name": "NASA FIRMS",
+        "url": "https://firms.modaps.eosdis.nasa.gov"
+      }
+    ],
+    "datePublished": "2023-09-24",
+    "url": "https://www.disasterdb.com/firedb",
+    "updateFrequency": "PT1H"
+  }
+  </script>
+  
+  <!-- Structured Data for GDACS Disaster Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "GDACS Disaster Alerts",
+    "description": "Real-time global disaster alerts from GDACS including earthquakes, tsunamis, floods, and tropical cyclones, processed with data from NASA FIRMS and other authoritative sources.",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "creator": {
+      "@type": "Organization",
+      "name": "DisasterDB",
+      "url": "https://firemap.live"
+    },
+    "keywords": [
+      "GDACS",
+      "disaster alerts",
+      "earthquakes",
+      "tsunamis",
+      "floods",
+      "tropical cyclones",
+      "global disasters",
+      "NASA FIRMS",
+      "DisasterDB"
+    ],
+    "temporalCoverage": "2026-01-01T00:00:00Z/2026-12-31T23:59:59Z",
+    "spatialCoverage": {
+      "@type": "Place",
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "0",
+        "longitude": "0"
+      }
+    },
+    "variableMeasured": [
+      {
+        "@type": "PropertyValue",
+        "name": "Disaster Type",
+        "value": "Earthquake"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "Severity",
+        "value": "7.5 Magnitude"
+      }
+    ],
+    "dataSource": [
+      {
+        "@type": "Organization",
+        "name": "GDACS",
+        "url": "https://www.gdacs.org"
+      },
+      {
+        "@type": "Organization",
+        "name": "NASA FIRMS",
+        "url": "https://firms.modaps.eosdis.nasa.gov"
+      }
+    ],
+    "datePublished": "2025-02-26",
+    "url": "https://firemap.live",
+    "updateFrequency": "PT1H"
+  }
+  </script>
+  
+  <!-- Mapbox GL JS CSS -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+  
+  <!-- Font Awesome CSS -->
+  <link rel="stylesheet" href="fontawesome/css/all.min.css">
+  
+  <!-- Google Fonts: Lexend and Nunito -->
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&family=Nunito:wght@400&display=swap" rel="stylesheet">
+  
+  <!-- Link to External CSS -->
+  <link href="styles3.css?v=20260816" rel="stylesheet"> <!-- Cache buster updated -->
+
+  <!-- IMPORTANT: Defer script so DOM elements exist before JS runs -->
+  <script src="script-test.js?v=20260825b" defer></script> <!-- TEST VERSION: global FIRMS MVT layer -->
+</head>
+<body>
+  <!-- Visually hidden H1 for search engines (map app has no visible heading) -->
+  <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">FireMap.live – Real-Time Global Wildfire and Smoke Tracking Map</h1>
+
+  <!-- Clickable Logo Button (with live clock) in Top-Left Corner -->
+  <div class="top-left-bar">
+    <button class="logo-box" id="logoBtn" aria-label="FireMap - reset map view">
+      <img src="fireicon.png" alt="FireMap Icon" class="logo-icon">
+      <span class="logo-stack">
+        <span class="logo-text">FireMap</span>
+        <span class="live-clock" id="liveClock">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span class="live-label">LIVE</span>
+          <span class="live-clock-times">
+            <span class="clock-entry clock-entry-primary">
+              <span class="clock-time" id="clockLocalTime">--:--</span>
+              <span class="clock-zone" id="clockLocalZone">LOCAL</span>
+            </span>
+            <span class="clock-sep" aria-hidden="true">&middot;</span>
+            <span class="clock-entry clock-entry-secondary">
+              <span class="clock-time" id="clockUtcTime">--:--</span>
+              <span class="clock-zone">UTC</span>
+            </span>
+          </span>
+        </span>
+      </span>
+    </button>
+  </div>
+
+<!-- Data Update Notification Banner - DISABLED -->
+<!--
+<div id="newFeatureNotification" class="notification-banner" style="display: none;">
+  <div id="notificationBannerContent" class="notification-content">
+    <div class="notification-title">Data Flow Restored</div>
+    <div class="notification-details">
+      Upgrades are complete and the system is running smoothly. Data is updating reliably every few minutes, and all layers, including the smoke layer, are back online. <strong>If you are not seeing the smoke layer, try clearing your browser cache and refreshing the page.</strong> Thank you for your patience and support.
+    </div>
+  </div>
+  <button id="dismissNotificationBannerBtn" class="dismiss-notification-btn">&times;</button>
+</div>
+-->
+
+  
+  <!-- Layer List Panel (Below Logo) -->
+  <div id="layerListPanel" class="layer-list-panel" aria-label="Layer List">
+    <div class="panel-header">
+      <h3>Layer List</h3>
+      <button id="closeLayerList" class="close-btn" aria-label="Close Layer List">×</button>
+    </div>
+    <div class="panel-content">
+      <form id="layerListForm">
+        <!-- USA Fire Points -->
+        <div class="layer-item">
+          <input type="checkbox" id="usa-fire-points" checked>
+          <label for="usa-fire-points">USA Fire Points</label>
+        </div>
+        <!-- Canada Fire Points -->
+        <div class="layer-item">
+          <input type="checkbox" id="canada-fire-points" checked>
+          <label for="canada-fire-points">Canada Fire Points</label>
+        </div>
+        <!-- Australian Fire Points -->
+        <div class="layer-item">
+          <input type="checkbox" id="fire-points-aus" checked>
+          <label for="fire-points-aus">Australia Bushfire Points</label>
+        </div>
+        <!-- European Fire Points -->
+        <div class="layer-item">
+          <input type="checkbox" id="fire-points-europe" checked>
+          <label for="fire-points-europe">European Fire Points</label>
+        </div>
+        <!-- NASA FIRMS clustered hotspots -->
+        <div class="layer-item">
+          <input type="checkbox" id="combined-fire-points" checked>
+          <label for="combined-fire-points">Hotspot Cluster</label>
+        </div>
+        <!-- GDACS Alerts -->
+        <div class="layer-item">
+          <input type="checkbox" id="disaster-points" checked>
+          <label for="disaster-points">GDACS Alerts</label>
+        </div>
+        <div class="layer-item">
+          <input type="checkbox" id="burned-areas-toggle" checked>
+          <label for="burned-areas-toggle">Burned Areas</label>
+        </div>
+        <!-- Volcano Layers -->
+        <div class="layer-item">
+          <input type="checkbox" id="volcano-points"> 
+          <label for="volcano-points">Volcanic Hotspots</label>
+        </div>
+        <!-- Live satellite ground tracks -->
+        <div class="layer-item">
+          <input type="checkbox" id="satellite-orbit" checked>
+          <label for="satellite-orbit">Satellite Tracks</label>
+        </div>
+        <!-- DeepMind cyclone forecast tracks -->
+        <div class="layer-item">
+          <input type="checkbox" id="hurricane-tracks" checked>
+          <label for="hurricane-tracks">Hurricane Tracks</label>
+        </div>
+        <!-- Smoke Layer with Opacity Slider -->
+        <div class="layer-item smoke-layer-item">
+          <div class="layer-item-main-controls">
+            <input type="checkbox" id="smoke-layer-toggle" checked>
+            <label for="smoke-layer-toggle">Wildfire Smoke Plume</label>
+          </div>
+          <div class="opacity-slider-container">
+            <label for="smokeOpacitySlider" class="opacity-slider-label">Opacity:</label>
+            <input type="range" id="smokeOpacitySlider" min="0" max="100" value="33" class="opacity-slider" aria-label="Smoke layer opacity">
+            <span id="smokeOpacityValue" class="opacity-value-display">33%</span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+<!-- Historical Fires Control Panel - DISABLED -->
+<!--
+<div id="historicalFiresPanel" 
+     style="display:none; position:absolute; bottom:80px; left:50%; 
+            transform: translateX(-50%); z-index:1000; 
+            background: rgba(43,43,43,0.9); padding: 10px; border-radius: 8px;">
+
+  <div class="year-input-container">
+    <label for="year-input">Year:</label>
+    <input type="number" id="year-input" min="1900" max="2025" placeholder="YYYY" />
+  </div>
+
+  <div class="checkbox-container">
+    <input type="checkbox" id="show-all" />
+    <label for="show-all">Show fires from all years</label>
+  </div>
+  
+</div>
+-->
+
+  <!-- Legend Panel -->
+  <div id="legendPanel" class="legend-panel" aria-labelledby="legendPanelTitle">
+      <div class="panel-header">
+          <h3 id="legendPanelTitle">Map Legend</h3>
+          <button id="closeLegendPanel" class="close-btn" aria-label="Close Legend">×</button>
+      </div>
+      <div class="panel-content">
+          <h4>Authoritative Fire Status</h4>
+          <ul class="legend-group">
+              <li><span class="legend-color" style="background-color: #ff0000; border: 2px solid #8B0000;"></span> Fire of Note</li>
+              <li><span class="legend-color" style="background-color: #ff4500; border: 2px solid #8B0000;"></span> Out of Control</li>
+              <li><span class="legend-color" style="background-color: #ff7f50; border: 1px solid #ffff00;"></span> Being Held / Under Control</li>
+              <li><span class="legend-color" style="background-color: #696969; border: 1px solid #8B0000;"></span> Out</li>
+          </ul>
+          <h4>Hotspot Cluster</h4>
+          <ul class="legend-group">
+              <li><span class="legend-color" style="background-color: rgba(255,0,0,1);"></span> High Activity</li>
+              <li><span class="legend-color" style="background-color: rgba(255,128,0,0.85);"></span> Medium Activity</li>
+              <li><span class="legend-color" style="background-color: rgba(204,204,0,0.85);"></span> Low Activity</li>
+              <li>(Opacity and size decrease with age)</li>
+          </ul>
+          <h4>Satellite Tracks</h4>
+          <ul class="legend-group">
+              <li><span class="legend-color" style="background-color: #5C9E97;"></span> VIIRS &mdash; Suomi NPP, NOAA-20, NOAA-21</li>
+              <li><span class="legend-color" style="background-color: #C98A45;"></span> MODIS &mdash; Terra, Aqua</li>
+              <li><span class="legend-color" style="background-color: #6486B4;"></span> SLSTR &mdash; Sentinel-3A, Sentinel-3B</li>
+              <li><span class="legend-color" style="background-color: #9A7AAE;"></span> OLI &mdash; Landsat 8, Landsat 9</li>
+              <li>Line is the ground track ahead, to the next polar pass</li>
+              <li>Click a satellite for its full 12-hour track</li>
+              <li>Faded icon = not collecting (Landsat images in daylight only)</li>
+          </ul>
+          <h4>Hurricane Tracks</h4>
+          <ul class="legend-group">
+              <li><span class="legend-color" style="background-color: #D96BE8;"></span> Category 5</li>
+              <li><span class="legend-color" style="background-color: #FF5A5A;"></span> Category 4</li>
+              <li><span class="legend-color" style="background-color: #FF8C42;"></span> Category 3</li>
+              <li><span class="legend-color" style="background-color: #FFB84D;"></span> Category 2</li>
+              <li><span class="legend-color" style="background-color: #FFE066;"></span> Category 1</li>
+              <li><span class="legend-color" style="background-color: #4DD0C7;"></span> Tropical Storm</li>
+              <li><span class="legend-color" style="background-color: #6EC1FF;"></span> Tropical Depression</li>
+              <li>Dashed line is the forecast track</li>
+          </ul>
+          <h4>Disaster Alerts (GDACS)</h4>
+          <ul class="legend-group">
+              <li><img src="https://firemap.live/map_icons/EQ_L.png" class="legend-icon-img" alt="Low intensity earthquake alert icon"> Earthquake (Low)</li>
+              <li><img src="https://firemap.live/map_icons/FL_M.png" class="legend-icon-img" alt="Medium intensity flood alert icon"> Flood (Medium)</li>
+              <li><img src="https://firemap.live/map_icons/CY_H.png" class="legend-icon-img" alt="High intensity cyclone alert icon"> Cyclone (High)</li>
+          </ul>
+           <h4>Volcanic Hotspots</h4>
+          <ul class="legend-group">
+              <li><img src="https://firemap.live/map_icons/volcano_high.png" class="legend-icon-img" alt="High heat volcano icon"> High Heat</li>
+              <li><img src="https://firemap.live/map_icons/volcano_medium.png" class="legend-icon-img" alt="Medium heat volcano icon"> Medium Heat</li>
+              <li><img src="https://firemap.live/map_icons/volcano_low.png" class="legend-icon-img" alt="Low heat volcano icon"> Low Heat</li>
+              <li><img src="https://firemap.live/map_icons/volcano_zero.png" class="legend-icon-img" alt="No activity volcano icon"> No Activity</li>
+          </ul>
+          <div id="smokeLegendItemContainer"> 
+            <h4>Wildfire Smoke/Plume (Hourly)</h4>
+            <ul class="legend-group">
+                <li id="smokeLegendTrigger"><span class="legend-color smoke-gradient-icon"></span> Surface PM2.5 <i class="fas fa-info-circle" style="margin-left: 5px; color: #ccc;"></i></li>
+                <li>(Higher concentrations are darker)</li>
+            </ul>
+            <div id="smokeColorRampPopup" class="smoke-color-ramp-popup">
+                <div class="legend-ramp-title">PM2.5 Concentration (µg/m³)</div>
+                <div class="legend-ramp-item"><div class="color-box color-s1"></div><div>1 µg/m³</div></div>
+                <div class="legend-ramp-item"><div class="color-box color-s2"></div><div>10 µg/m³</div></div>
+                <div class="legend-ramp-item"><div class="color-box color-s3"></div><div>20 µg/m³</div></div>
+                <div class="legend-ramp-item"><div class="color-box color-s4"></div><div>30 µg/m³</div></div>
+                <div class="legend-ramp-item"><div class="color-box color-s5"></div><div>40 µg/m³</div></div>
+                <div class="legend-ramp-item"><div class="color-box color-s6"></div><div>50 µg/m³</div></div>
+                <div class="legend-ramp-item"><div class="color-box color-s7"></div><div>60 µg/m³</div></div>
+                <div class="legend-ramp-item"><div class="color-box color-s8"></div><div>70 µg/m³</div></div>
+                <div class="legend-ramp-item"><div class="color-box color-s9"></div><div>80 µg/m³</div></div>
+                <div class="legend-ramp-item"><div class="color-box color-s10"></div><div>90 µg/m³</div></div>
+                <div class="legend-ramp-item"><div class="color-box color-s11"></div><div>100 µg/m³</div></div>
+                <div class="legend-ramp-item"><div class="color-box color-s12"></div><div>250 µg/m³</div></div>
+                <div class="legend-ramp-item"><div class="color-box color-s13"></div><div>500 µg/m³</div></div>
+            </div>
+          </div>
+      </div>
+  </div>
+  
+  <!-- Map Container -->
+  <div id="map"></div>
+  
+  <!-- Info Box Container -->
+  <div id="infoBox" class="info-box"></div>
+  
+  <!-- Fixed Vertical Toolbar -->
+  <div class="vertical-toolbar" aria-label="Map Toolbar">
+    <!-- Toggle Layers Button -->
+    <button class="toolbar-btn" id="toggleLayersBtn" aria-label="Toggle Layers" title="Toggle Layers">
+      <i class="fa-solid fa-layer-group"></i>
+    </button>
+    
+    <!-- Change Basemap Button -->
+    <div style="position: relative;">
+      <button class="toolbar-btn" id="basemapBtn" aria-label="Change Basemap" title="Change Basemap">
+        <i class="fa-solid fa-map"></i>
+      </button>
+      <!-- Basemap Dropdown -->
+      <div class="basemap-dropdown" id="basemapDropdown">
+        <select id="basemapSelector" aria-label="Basemap Selector">
+          <option value="mapbox://styles/disasterdb/cmaycljer005l01sy9qzodnrb">FireMap.live BaseMap V1</option>
+          <option value="mapbox://styles/disasterdb/cmb7ma1cm00yn01rf2vtb9od5">Satellite Streets 3D</option>
+          <option value="mapbox://styles/disasterdb/cm17bo79203s201r722er0wsz">Navigation 3D</option>
+          <option value="mapbox://styles/mapbox/outdoors-v11">Outdoors</option>
+          <option value="mapbox://styles/mapbox/light-v10">Light</option>
+          <option value="mapbox://styles/mapbox/dark-v10">Dark</option>
+          <option value="mapbox://styles/mapbox/streets-v11">Streets</option>
+        </select>
+      </div>
+    </div>
+    
+    
+    <!-- Search Button -->
+    <button class="toolbar-btn" id="searchBtn" aria-label="Search" title="Search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+	
+  	<!-- Locate Me Button -->
+	<button class="toolbar-btn" id="locateMeBtn" aria-label="Locate Me" title="Locate Me">
+    <i class="fa-solid fa-location-crosshairs"></i>
+    </button>
+
+    <!-- Measure Distance Button -->
+    <button class="toolbar-btn" id="measureBtn" aria-label="Measure Distance" title="Measure Distance" aria-pressed="false">
+      <i class="fa-solid fa-ruler"></i>
+    </button>
+    
+    <!-- Share Map Button -->
+    <button class="toolbar-btn" id="shareMapBtn" aria-label="Share Map" title="Share Map">
+      <i class="fa-solid fa-share-from-square" aria-hidden="true"></i>
+    </button>
+    
+    <!-- Historical Fires Button - DISABLED -->
+    <!--
+    <button class="toolbar-btn" id="historicalFiresBtn" aria-label="Historical Fires" title="Historical Fires">
+      <i class="fa-solid fa-clock-rotate-left"></i>
+    </button>
+    -->
+
+    <!-- Legend Button -->
+    <button class="toolbar-btn" id="legendBtn" aria-label="Show Map Legend" title="Show Map Legend" aria-expanded="false">
+        <i class="fas fa-list-ul"></i>
+    </button>
+    
+    <!-- About FireMap.live Button -->
+    <button class="toolbar-btn" id="aboutBtn" aria-label="About FireMap.live" title="About FireMap.live">
+      <i class="fa-solid fa-circle-info"></i>
+    </button>
+  </div>
+  
+  <!-- Search Panel -->
+  <div id="searchPanel" class="side-panel" aria-label="Search Fires">
+    <div class="panel-header">
+      <h2>Search Fires</h2>
+      <button class="close-panel-btn" id="closeSearchPanel" aria-label="Close Search Panel">×</button>
+    </div>
+    <div class="panel-content">
+      <input type="text" id="searchInput" placeholder="Enter fire name..." aria-label="Search Input">
+      <ul id="searchResults"></ul>
+    </div>
+  </div>
+  
+  <!-- Share Map Modal -->
+  <div id="shareMapModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="shareMapModalTitle">
+    <div class="modal-content">
+      <span class="close-btn" aria-label="Close">×</span>
+      <h2 id="shareMapModalTitle">Share Map</h2>
+      <p>Share the current map view by copying the URL below:</p>
+      <input type="text" id="shareMapURL" readonly style="width: 100%; padding: 10px; border: none; border-radius: 4px;"/>
+      <button id="copyURLBtn" style="margin-top: 10px; padding: 10px 15px; border: none; border-radius: 4px; background-color: #FF6347; color: #fff; cursor: pointer;">Copy URL</button>
+    </div>
+  </div>
+
+  <!-- Smoke Info Modal -->
+  <div id="smokeInfoModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="smokeInfoModalTitle">
+    <div class="modal-content smoke-info-modal-content"> 
+      <span class="close-btn" id="closeSmokeInfoModalBtn" aria-label="Close">×</span>
+      <h2 id="smokeInfoModalTitle">About the Wildfire Smoke Layer (Beta)</h2>
+      <p class="modal-intro">This layer visualizes surface concentrations of PM2.5 (fine particulate matter with a diameter of 2.5 micrometers or less) originating from wildfires. PM2.5 is a key air pollutant that can significantly impact health and visibility.</p>
+      
+      <h4>Key Features:</h4>
+      <ul>
+        <li><strong>Data Source:</strong> Regional Deterministic Air Quality Analysis (RDAQA) system, Environment and Climate Change Canada.</li>
+        <li><strong>Update Frequency:</strong> Updated hourly, providing near real-time smoke information.</li>
+        <li><strong>Resolution:</strong> Data is processed at approximately 1km spatial resolution using bicubic resampling for smoother visualization.</li>
+        <li><strong>Coverage:</strong> Currently covers North America.</li>
+        <li><strong>Status:</strong> This is a BETA layer. Accuracy and availability may vary.</li>
+      </ul>
+      
+      <h4>Coming Soon:</h4>
+      <ul>
+        <li>Integration of global smoke data sources.</li>
+        <li>Incorporation of PurpleAir sensor data for localized PM2.5 readings.</li>
+        <li>Animated 72-hour smoke forecast.</li>
+      </ul>
+      <hr class="modal-separator">
+      <p class="modal-disclaimer">This layer is intended for informational purposes to understand potential smoke impacts from wildfires. Always consult official air quality advisories from your local health and environmental agencies.</p>
+    </div>
+  </div>
+  
+  <!-- Measure Distance Readout -->
+  <div id="measurePanel" class="measure-panel" role="status" aria-live="polite" aria-label="Distance Measurement">
+    <div class="measure-readout">
+      <span class="measure-km" id="measureKm">0.00 km</span>
+      <span class="measure-sep">/</span>
+      <span class="measure-mi" id="measureMi">0.00 mi</span>
+    </div>
+    <div class="measure-hint" id="measureHint">Click the map to start measuring</div>
+    <div class="measure-actions">
+      <button type="button" class="measure-btn-sm" id="measureClearBtn">Clear</button>
+      <button type="button" class="measure-btn-sm measure-btn-done" id="measureDoneBtn">Done</button>
+    </div>
+  </div>
+
+  <!-- About FireMap.live Fullscreen Panel -->
+  <div id="aboutPanel" class="fullscreen-panel" aria-label="About FireMap.live">
+    <div class="panel-header">
+      <h2>About FireMap.live</h2>
+      <button class="close-panel-btn" id="closeAboutPanel" aria-label="Close About Panel">×</button>
+    </div>
+    <div class="panel-content">
+      <p>Firemap.live is a comprehensive global wildfire tracking platform that integrates satellite data and authoritative fire information from agencies across the world. It is powered by FireDB, which enhances the data from NASA's Fire Information for Resource Management System (FIRMS) with authoritative fire points sourced from agencies in the U.S., Canada, Europe, and Australia. This combination allows Firemap.live to provide real-time, standardized global fire statuses.</p>
+      <p>The platform delivers detailed insights through real-time fire perimeters, heat maps, and fire status updates. By combining early detection data from NASA FIRMS with local fire authorities, Firemap.live offers one of the most reliable tools for wildfire monitoring and response. It is particularly valuable for emergency responders, researchers, and anyone needing to stay updated on global fire events.</p>
+      <p><strong>Disclaimer:</strong> FireMap.live provides wildfire data for informational purposes only. Although we strive for accuracy, this data should not be relied upon for critical safety decisions. Always consult your local authorities or official emergency management agencies for the most accurate and timely information. FireMap.live is not legally responsible or liable for any actions taken based upon this data.</p>
+      <p>See <a href="https://disasterdb.com/firedb" target="_blank">disasterdb.com/firedb</a> for more details.</p>
+    </div>
+  </div>
+  
+  <!-- Mapbox GL JS -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+
+  <!-- JS Fallback Message -->
+  <div id="js-error-message" style="display: none; color: white; background: #000; padding: 20px; text-align: center; position: absolute; top: 50px; left: 50%; transform: translateX(-50%); z-index: 3000;">
+    FireMap may not be loading correctly. This can happen after an update.<br>
+    Try <strong>clearing your browser cache</strong> or doing a hard refresh:<br>
+    <code>Ctrl+Shift+R</code> (Windows) or <code>Cmd+Shift+R</code> (Mac).
+  </div>
+
+  <script>
+    setTimeout(() => {
+      const mapReady = document.getElementById('map')?.children.length > 0;
+      if (!mapReady) {
+        document.getElementById('js-error-message').style.display = 'block';
+      }
+    }, 6000);
+  </script>
+</body>
+</html>
