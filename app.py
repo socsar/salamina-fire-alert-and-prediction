@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from io import StringIO
 import json
 import math
@@ -287,14 +288,14 @@ if not hotspots.empty:
 c_title, c_badge = st.columns([3, 1])
 c_title.title("🔥 Live Fire Danger Monitor — Salamina, Greece")
 c_title.caption(f"Monitoring: **{place}** · Updated: "
-                f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+                f"{datetime.now(ZoneInfo('Europe/Athens')).strftime('%Y-%m-%d %H:%M:%S')}")
 c_badge.markdown(
     f"<div style='background:{color};color:white;padding:20px;border-radius:"
     f"12px;text-align:center;font-size:22px'><b>{level.upper()}</b><br>"
     f"FFDI {ffdi}</div>", unsafe_allow_html=True)
 
 st.session_state.setdefault("alerts_sent", {})
-alert_key = f"{place}_{datetime.now().strftime('%Y%m%d')}_{level}"
+alert_key = f"{place}_{datetime.now(ZoneInfo('Europe/Athens')).strftime('%Y%m%d')}_{level}"
 crossed = [lv for lv, th in ALERT_THRESHOLDS.items() if ffdi >= th]
 
 if (crossed or hotspot_nearby) and not st.session_state["alerts_sent"].get(alert_key):
@@ -302,7 +303,7 @@ if (crossed or hotspot_nearby) and not st.session_state["alerts_sent"].get(alert
     msg = (f"🔥 FIRE ALERT — {place}, Salamina\n"
            f"FFDI: {ffdi} ({highest})\n"
            f"Satellite hotspot within 5 km: {'YES ⚠️' if hotspot_nearby else 'No'}\n"
-           f"Time: {datetime.now().strftime('%H:%M')}\n"
+           f"Time: {datetime.now(ZoneInfo('Europe/Athens')).strftime('%H:%M')}\n"
            f"Take precautions immediately.")
     st.toast(f"⚠️ {highest} at {place}!", icon="🚨")
     st.markdown("""<audio autoplay><source src=
