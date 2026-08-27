@@ -252,7 +252,6 @@ chat_id = "-1001234567890""")
 st.sidebar.header("🌍 FireMap.live Overlays")
 show_fm_active = st.sidebar.checkbox("🔥 Active Fires (FireMap)", value=True)
 show_fm_burns  = st.sidebar.checkbox("⚫ Burned Areas (FireMap)", value=True)
-show_fm_smoke  = st.sidebar.checkbox("💨 Smoke Plumes (FireMap)", value=True)
 
 # =========================================================
 # FETCH MAIN LOCATION DATA
@@ -406,15 +405,6 @@ fig_map.add_trace(go.Scattermapbox(
 
 wms_layers = []
 
-if show_fm_smoke:
-    wms_layers.append({
-        "sourcetype": "raster",
-        "source": [
-            "https://geo.firemap.live/geoserver/ows?service=WMS&version=1.1.1&request=GetMap&layers=FireDB:smoke_latest&styles=&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG:3857&format=image/png&transparent=true"
-        ],
-        "opacity": 0.5
-    })
-
 if show_fm_burns:
     wms_layers.append({
         "sourcetype": "raster",
@@ -478,7 +468,7 @@ if is_mobile:
         st.dataframe(fc, use_container_width=True)
         st.plotly_chart(fig_h, use_container_width=True)
 else:
-    st.subheader("🗺️ Island Map — Danger · Burn Scars · Hotspots · Smoke Plumes")
+    st.subheader("🗺️ Island Map — Danger · Burn Scars · Hotspots")
     st.plotly_chart(fig_map, use_container_width=True)
 
     st.subheader("📅 7-Day Outlook")
