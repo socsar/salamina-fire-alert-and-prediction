@@ -44,10 +44,18 @@ st.markdown("""
         .stMetric { font-size: 14px; }
         .stMetric > div > div { font-size: 20px !important; }
         div[data-testid="column"] { min-width: 45% !important; }
-        .block-container { padding-top: 1rem; padding-left: 0.7rem;
-                           padding-right: 0.7rem; }
         h1 { font-size: 1.4rem !important; }
     }
+    .block-container {
+        padding-top: 1.5rem !important;
+        padding-left: 0rem !important;
+        padding-right: 0rem !important;
+        padding-bottom: 0rem !important;
+        max-width: 100% !important;
+    }
+    header { visibility: hidden; }
+    #MainMenu { visibility: hidden; }
+    footer { visibility: hidden; }
     div[data-testid="stAlert"] { position: sticky; top: 0; z-index: 999; }
 </style>
 """, unsafe_allow_html=True)
@@ -371,12 +379,9 @@ if place not in mdf["name"].values:
 # =========================================================
 fig_map = go.Figure()
 
-
-
-
 # --- Layer 3: Active Fire Hotspots (FireMap.live) ---
 if not hotspots.empty:
-    fig_map.add_trace(go.Scattermap(
+    fig_map.add_trace(go.Scattermapbox(
         lat=hotspots["lat"], lon=hotspots["lon"], mode="markers",
         marker=dict(size=14, color="#ff3300", opacity=0.9),
         customdata=np.stack([
@@ -390,7 +395,7 @@ if not hotspots.empty:
 
 
 # --- Layer 2: live danger points (on top) ---
-fig_map.add_trace(go.Scattermap(
+fig_map.add_trace(go.Scattermapbox(
     lat=mdf["lat"], lon=mdf["lon"], mode="markers+text",
     text=mdf["name"], textposition="bottom center",
     marker=dict(size=22, color=mdf["Color"]),
@@ -421,13 +426,14 @@ if show_fm_burns:
 
 
 fig_map.update_layout(
-    map=dict(
-        style="carto-darkmatter", 
+    mapbox=dict(
+        accesstoken=st.secrets.get("MAPBOX_ACCESS_TOKEN", "YOUR_MAPBOX_TOKEN"),
+        style="mapbox://styles/disasterdb/cmaycljer005l01sy9qzodnrb", 
         center=SALAMINA_CENTER, 
-        zoom=11,
+        zoom=12.5,
         layers=wms_layers
     ),
-    height=400 if is_mobile else 550, margin=dict(l=0, r=0, t=0, b=0),
+    height=550 if is_mobile else 750, margin=dict(l=0, r=0, t=0, b=0),
     showlegend=False)
 
 # =========================================================
