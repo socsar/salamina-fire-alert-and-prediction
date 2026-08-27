@@ -253,6 +253,24 @@ st.sidebar.header("🌍 FireMap.live Overlays")
 show_fm_active = st.sidebar.checkbox("🔥 Active Fires (FireMap)", value=True)
 show_fm_burns  = st.sidebar.checkbox("⚫ Burned Areas (FireMap)", value=True)
 
+st.sidebar.markdown("---")
+st.sidebar.header("📖 Υπόμνημα Χάρτη (Legend)")
+st.sidebar.markdown("""
+<div style='font-size:14px; line-height:1.6;'>
+    <b>🔴 Ενεργές Εστίες (Hotspots)</b><br>
+    Δορυφορικές ανιχνεύσεις φωτιάς<br><br>
+    <b>⚫ Καμένες Εκτάσεις</b><br>
+    Περιοχές που έχουν καεί<br><br>
+    <b>🔥 Δείκτης FFDI (Κίνδυνος):</b><br>
+    <span style='color:#2ecc71'>●</span> Χαμηλός (0-12)<br>
+    <span style='color:#f1c40f'>●</span> Υψηλός (12-25)<br>
+    <span style='color:#e67e22'>●</span> Πολύ Υψηλός (25-50)<br>
+    <span style='color:#e74c3c'>●</span> Σοβαρός (50-75)<br>
+    <span style='color:#c0392b'>●</span> Ακραίος (75-100)<br>
+    <span style='color:#8e44ad'>●</span> Καταστροφικός (100+)
+</div>
+""", unsafe_allow_html=True)
+
 # =========================================================
 # FETCH MAIN LOCATION DATA
 # =========================================================
