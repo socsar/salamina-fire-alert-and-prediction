@@ -127,6 +127,26 @@ def fetch_firemap_hotspots():
         st.sidebar.warning(f"Failed to fetch FireMap active fires: {e}")
     return pd.DataFrame()
 
+@st.cache_data(ttl=3600)
+def fetch_burned_areas():
+    lon_min, lat_min, lon_max, lat_max = SALAMINA_BBOX
+    url = (f"https://geo.firemap.live/geoserver/ows?service=WFS&version=1.0.0"
+           f"&request=GetFeature&typeName=FireDB:fire_pg_combined"
+           f"&bbox={lon_min},{lat_min},{lon_max},{lat_max}"
+           f"&outputFormat=application/json")
+    try:
+        r = requests.get(url, timeout=15)
+        if r.ok:
+            data = r.json()
+            # Inject explicit IDs into features for Choroplethmapbox matching
+            for i, feat in enumerate(data.get("features", [])):
+                feat["id"] = str(feat.get("id", i))
+            return data
+    except Exception:
+        pass
+    return None
+
+
 @st.cache_data(ttl=86400)
 def geocode(query):
     """
@@ -496,15 +516,21 @@ fig_map.add_trace(go.Scattermapbox(
 wms_layers = []
 
 if show_fm_burns:
-    wms_layers.append({
-        "sourcetype": "raster",
-        "source": [
-            "https://geo.firemap.live/geoserver/ows?service=WMS&version=1.1.1&request=GetMap&layers=FireDB:fire_pg_combined&styles=&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG:3857&format=image/png&transparent=true"
-        ],
-        "opacity": 0.6
-    })
-
-
+    burned_geojson = fetch_burned_areas()
+    if burned_geojson and len(burned_geojson.get("features", [])) > 0:
+        ids = [f["id"] for f in burned_geojson["features"]]
+        df_burns = pd.DataFrame({"id": ids, "val": [1]*len(ids)})
+        
+        fig_map.add_trace(go.Choroplethmapbox(
+            geojson=burned_geojson,
+            locations=df_burns["id"],
+            z=df_burns["val"],
+            colorscale=[[0, "black"], [1, "black"]],
+            showscale=False,
+            marker_opacity=0.6,
+            marker_line_width=1,
+            hovertemplate="🔥 <b>Burned Area</b><br>No date/metadata provided by server<extra></extra>"
+        ))
 
 fig_map.update_layout(
     mapbox=dict(
