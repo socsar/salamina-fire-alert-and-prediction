@@ -138,9 +138,29 @@ def fetch_burned_areas():
         r = requests.get(url, timeout=15)
         if r.ok:
             data = r.json()
-            # Inject explicit IDs into features for Choroplethmapbox matching
             for i, feat in enumerate(data.get("features", [])):
                 feat["id"] = str(feat.get("id", i))
+                
+                # Approximate area calculation
+                area_ha = 0
+                geom = feat.get("geometry", {})
+                gtype = geom.get("type", "")
+                coords = geom.get("coordinates", [])
+                
+                if gtype == "Polygon" and len(coords) > 0:
+                    ring = coords[0]
+                    if len(ring) > 2:
+                        clat = math.radians(sum(p[1] for p in ring) / len(ring))
+                        R = 6371000
+                        x = [math.radians(p[0]) * R * math.cos(clat) for p in ring]
+                        y = [math.radians(p[1]) * R for p in ring]
+                        area = 0.0
+                        for j in range(len(ring)):
+                            k = (j + 1) % len(ring)
+                            area += x[j] * y[k] - x[k] * y[j]
+                        area_ha = abs(area) / 2.0 / 10000.0
+                        
+                feat["properties"]["calc_area_ha"] = round(area_ha, 1)
             return data
     except Exception:
         pass
@@ -548,17 +568,19 @@ if show_fm_burns:
     burned_geojson = fetch_burned_areas()
     if burned_geojson and len(burned_geojson.get("features", [])) > 0:
         ids = [f["id"] for f in burned_geojson["features"]]
-        df_burns = pd.DataFrame({"id": ids, "val": [1]*len(ids)})
+        areas = [f["properties"].get("calc_area_ha", 0) for f in burned_geojson["features"]]
+        df_burns = pd.DataFrame({"id": ids, "val": [1]*len(ids), "area": areas})
         
         fig_map.add_trace(go.Choroplethmapbox(
             geojson=burned_geojson,
             locations=df_burns["id"],
             z=df_burns["val"],
+            customdata=df_burns[["area"]],
             colorscale=[[0, "black"], [1, "black"]],
             showscale=False,
             marker_opacity=0.4,
             marker_line_width=1,
-            hoverinfo="skip"
+            hovertemplate="🔥 <b>Historical Burned Area</b><br>Approx. Size: %{customdata[0]} ha<extra></extra>"
         ))
         
     df_ba_meta = fetch_burned_area_metadata()
