@@ -359,15 +359,33 @@ else:
 # =========================================================
 fig = go.Figure(go.Indicator(
     mode="gauge+number", value=ffdi,
-    gauge={"axis": {"range": [0, 150]}, "bar": {"color": color},
+    gauge={"axis": {"range": [0, 150]}, 
+           "bar": {"color": "rgba(0,0,0,0)", "thickness": 0},
            "steps": [{"range": [0, 12], "color": "#2ecc71"},
                      {"range": [12, 25], "color": "#f1c40f"},
                      {"range": [25, 50], "color": "#e67e22"},
                      {"range": [50, 75], "color": "#e74c3c"},
                      {"range": [75, 100], "color": "#c0392b"},
-                     {"range": [100, 150], "color": "#8e44ad"}],
-           "threshold": {"line": {"color": "black", "width": 4}, "value": ffdi}}))
-fig.update_layout(height=280 if is_mobile else 300, margin=dict(t=20, b=20))
+                     {"range": [100, 150], "color": "#8e44ad"}]}
+))
+
+# Analog clock needle math
+theta = (1 - ffdi / 150) * np.pi
+r = 0.35
+x_head = 0.5 + r * np.cos(theta)
+y_head = 0.24 + r * np.sin(theta)
+path = f"M 0.485 0.24 L 0.515 0.24 L {x_head} {y_head} Z"
+
+fig.update_layout(
+    height=280 if is_mobile else 300, 
+    margin=dict(t=20, b=20),
+    shapes=[dict(
+        type='path',
+        path=path,
+        fillcolor='white',
+        line_color='white'
+    )]
+)
 st.plotly_chart(fig, use_container_width=True)
 
 # =========================================================
