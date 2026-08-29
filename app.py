@@ -8,6 +8,10 @@ import base64
 from zoneinfo import ZoneInfo
 from io import StringIO
 import json
+import pandas as pd
+from streamlit_echarts import st_echarts
+from io import StringIO
+import json
 import math
 
 st.set_page_config(page_title="🔥 Salamina Fire Danger", page_icon="🔥",
@@ -358,52 +362,85 @@ else:
 # =========================================================
 # GAUGE
 # =========================================================
-# Load vintage brass gauge background
-with open("assets/gauge_bg.jpg", "rb") as f:
-    encoded_img = base64.b64encode(f.read()).decode("utf-8")
-img_str = f"data:image/jpeg;base64,{encoded_img}"
+option = {
+    "series": [
+        {
+            "type": "gauge",
+            "startAngle": 210,
+            "endAngle": -30,
+            "min": 0,
+            "max": 150,
+            "splitNumber": 6,
+            "itemStyle": {
+                "color": "#d4af37", # Vintage brass/gold needle
+                "shadowColor": "rgba(0,0,0,0.5)",
+                "shadowBlur": 10,
+                "shadowOffsetX": 2,
+                "shadowOffsetY": 2
+            },
+            "progress": {
+                "show": False
+            },
+            "pointer": {
+                "icon": "path://M12.8,0.7l12,40.1H0.7L12.8,0.7z",
+                "length": "70%",
+                "width": 12,
+                "offsetCenter": [0, "-5%"]
+            },
+            "axisLine": {
+                "lineStyle": {
+                    "width": 15,
+                    "color": [
+                        [12/150, "#2ecc71"],
+                        [25/150, "#f1c40f"],
+                        [50/150, "#e67e22"],
+                        [75/150, "#e74c3c"],
+                        [100/150, "#c0392b"],
+                        [1, "#8e44ad"]
+                    ]
+                }
+            },
+            "axisTick": {
+                "splitNumber": 5,
+                "distance": -15,
+                "length": 8,
+                "lineStyle": {
+                    "color": "#fff",
+                    "width": 2
+                }
+            },
+            "splitLine": {
+                "distance": -15,
+                "length": 15,
+                "lineStyle": {
+                    "color": "#fff",
+                    "width": 3
+                }
+            },
+            "axisLabel": {
+                "distance": 25,
+                "color": "#ddd",
+                "fontSize": 14,
+                "fontWeight": "bold"
+            },
+            "detail": {
+                "valueAnimation": True,
+                "formatter": f"{{value}} FFDI\\n{level}",
+                "color": "inherit",
+                "fontSize": 20,
+                "fontWeight": "bolder",
+                "offsetCenter": [0, "60%"]
+            },
+            "data": [
+                {
+                    "value": ffdi
+                }
+            ]
+        }
+    ]
+}
 
-# The generated image arc starts at ~225 deg (bottom left) and ends at ~-45 deg (bottom right)
-# Total arc = 270 degrees. FFDI 0 -> 225 deg, FFDI 150 -> -45 deg.
-theta_deg = 225 - (min(ffdi, 150) / 150) * 270
-theta = theta_deg * np.pi / 180
-
-# Needle math from exact center (0.5, 0.5)
-r = 0.35 
-x_head = 0.5 + r * np.cos(theta)
-y_head = 0.5 + r * np.sin(theta)
-
-path = f"M 0.485 0.5 L 0.515 0.5 L {x_head} {y_head} Z"
-
-fig = go.Figure()
-fig.update_xaxes(range=[0, 1], showgrid=False, zeroline=False, visible=False)
-fig.update_yaxes(range=[0, 1], showgrid=False, zeroline=False, visible=False)
-
-fig.update_layout(
-    height=300, 
-    width=300,
-    margin=dict(t=0, b=0, l=0, r=0),
-    images=[dict(
-        source=img_str,
-        xref="paper", yref="paper",
-        x=0, y=1,
-        sizex=1, sizey=1,
-        xanchor="left", yanchor="top",
-        layer="below"
-    )],
-    shapes=[dict(
-        type='path',
-        path=path,
-        fillcolor='black',
-        line_color='black'
-    ), dict( # Center pivot
-        type="circle",
-        xref="paper", yref="paper",
-        x0=0.47, y0=0.47, x1=0.53, y1=0.53,
-        fillcolor="black", line_color="black"
-    )]
-)
-st.plotly_chart(fig, use_container_width=False)
+st_echarts(options=option, height="350px")
 
 # =========================================================
 # COMPUTE ALL MONITORING POINTS
