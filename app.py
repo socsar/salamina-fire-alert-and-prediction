@@ -146,6 +146,35 @@ def fetch_burned_areas():
         pass
     return None
 
+@st.cache_data(ttl=3600)
+def fetch_burned_area_metadata():
+    lon_min, lat_min, lon_max, lat_max = SALAMINA_BBOX
+    url = (f"https://geo.firemap.live/geoserver/ows?service=WFS&version=1.0.0"
+           f"&request=GetFeature&typeName=FireDB:modis_ba_pt_7day"
+           f"&bbox={lon_min},{lat_min},{lon_max},{lat_max}"
+           f"&outputFormat=application/json")
+    try:
+        r = requests.get(url, timeout=15)
+        if r.ok:
+            data = r.json()
+            features = data.get("features", [])
+            pts = []
+            for feat in features:
+                coords = feat["geometry"]["coordinates"]
+                props = feat["properties"]
+                pts.append({
+                    "lon": coords[0], "lat": coords[1],
+                    "name": props.get("fire_name", "Unknown"),
+                    "status": props.get("fire_status", "Unknown"),
+                    "ignition_date": props.get("ignition_date", "Unknown"),
+                    "duration": props.get("duration_days", 0),
+                    "size_ha": props.get("size_ha", 0)
+                })
+            return pd.DataFrame(pts)
+    except Exception:
+        pass
+    return pd.DataFrame()
+
 
 @st.cache_data(ttl=86400)
 def geocode(query):
@@ -527,9 +556,29 @@ if show_fm_burns:
             z=df_burns["val"],
             colorscale=[[0, "black"], [1, "black"]],
             showscale=False,
-            marker_opacity=0.6,
+            marker_opacity=0.4,
             marker_line_width=1,
-            hovertemplate="🔥 <b>Burned Area</b><br>No date/metadata provided by server<extra></extra>"
+            hoverinfo="skip"
+        ))
+        
+    df_ba_meta = fetch_burned_area_metadata()
+    if not df_ba_meta.empty:
+        fig_map.add_trace(go.Scattermapbox(
+            lat=df_ba_meta["lat"], lon=df_ba_meta["lon"], mode="markers",
+            marker=dict(size=12, color="black", opacity=0.8),
+            customdata=np.stack([
+                df_ba_meta["name"],
+                df_ba_meta["ignition_date"],
+                df_ba_meta["duration"],
+                df_ba_meta["size_ha"],
+                df_ba_meta["status"]
+            ], axis=-1),
+            hovertemplate=("🖤 <b>BURNED AREA DATA</b><br>"
+                           "Name: %{customdata[0]}<br>"
+                           "Ignition Date: %{customdata[1]}<br>"
+                           "Duration: %{customdata[2]} days<br>"
+                           "Size: %{customdata[3]} ha<br>"
+                           "Status: %{customdata[4]}<extra></extra>")
         ))
 
 fig_map.update_layout(
