@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 from datetime import datetime
+import base64
 from zoneinfo import ZoneInfo
 from io import StringIO
 import json
@@ -357,36 +358,52 @@ else:
 # =========================================================
 # GAUGE
 # =========================================================
-fig = go.Figure(go.Indicator(
-    mode="gauge+number", value=ffdi,
-    gauge={"axis": {"range": [0, 150]}, 
-           "bar": {"color": "rgba(0,0,0,0)", "thickness": 0},
-           "steps": [{"range": [0, 12], "color": "#2ecc71"},
-                     {"range": [12, 25], "color": "#f1c40f"},
-                     {"range": [25, 50], "color": "#e67e22"},
-                     {"range": [50, 75], "color": "#e74c3c"},
-                     {"range": [75, 100], "color": "#c0392b"},
-                     {"range": [100, 150], "color": "#8e44ad"}]}
-))
+# Load vintage brass gauge background
+with open("assets/gauge_bg.jpg", "rb") as f:
+    encoded_img = base64.b64encode(f.read()).decode("utf-8")
+img_str = f"data:image/jpeg;base64,{encoded_img}"
 
-# Analog clock needle math
-theta = (1 - ffdi / 150) * np.pi
-r = 0.35
+# The generated image arc starts at ~225 deg (bottom left) and ends at ~-45 deg (bottom right)
+# Total arc = 270 degrees. FFDI 0 -> 225 deg, FFDI 150 -> -45 deg.
+theta_deg = 225 - (min(ffdi, 150) / 150) * 270
+theta = theta_deg * np.pi / 180
+
+# Needle math from exact center (0.5, 0.5)
+r = 0.35 
 x_head = 0.5 + r * np.cos(theta)
-y_head = 0.24 + r * np.sin(theta)
-path = f"M 0.485 0.24 L 0.515 0.24 L {x_head} {y_head} Z"
+y_head = 0.5 + r * np.sin(theta)
+
+path = f"M 0.485 0.5 L 0.515 0.5 L {x_head} {y_head} Z"
+
+fig = go.Figure()
+fig.update_xaxes(range=[0, 1], showgrid=False, zeroline=False, visible=False)
+fig.update_yaxes(range=[0, 1], showgrid=False, zeroline=False, visible=False)
 
 fig.update_layout(
-    height=280 if is_mobile else 300, 
-    margin=dict(t=20, b=20),
+    height=300, 
+    width=300,
+    margin=dict(t=0, b=0, l=0, r=0),
+    images=[dict(
+        source=img_str,
+        xref="paper", yref="paper",
+        x=0, y=1,
+        sizex=1, sizey=1,
+        xanchor="left", yanchor="top",
+        layer="below"
+    )],
     shapes=[dict(
         type='path',
         path=path,
-        fillcolor='white',
-        line_color='white'
+        fillcolor='black',
+        line_color='black'
+    ), dict( # Center pivot
+        type="circle",
+        xref="paper", yref="paper",
+        x0=0.47, y0=0.47, x1=0.53, y1=0.53,
+        fillcolor="black", line_color="black"
     )]
 )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=False)
 
 # =========================================================
 # COMPUTE ALL MONITORING POINTS
