@@ -436,8 +436,7 @@ if show_fm_burns:
 
 fig_map.update_layout(
     mapbox=dict(
-        accesstoken=st.secrets.get("MAPBOX_ACCESS_TOKEN", "YOUR_MAPBOX_TOKEN"),
-        style="mapbox://styles/disasterdb/cmaycljer005l01sy9qzodnrb", 
+        style="open-street-map", 
         center=SALAMINA_CENTER, 
         zoom=12.5,
         layers=wms_layers
